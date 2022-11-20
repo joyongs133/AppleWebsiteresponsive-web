@@ -44,7 +44,10 @@ const searchInputEl = document.querySelector('.search-wrap input');
 const searchDelays = [...document.querySelectorAll('li')];
 
 searchStarterEl.addEventListener('click', showSearch)
-searchCloserEl.addEventListener('click', hideSearch)
+searchCloserEl.addEventListener('click', function (event) {
+  event.stopPropagation()
+  hideSearch()
+})
 shadowEl.addEventListener('click', hideSearch)
 
 
@@ -62,6 +65,12 @@ function showSearch() {
  }, 600)
 
 }
+function playScroll() {
+ document.documentElement.remove('fixed')
+}
+function stopScroll() {
+  document.documentElement.add('fixed')
+}
 
 function hideSearch() {
   headerEl.classList.remove('searching');
@@ -75,6 +84,78 @@ function hideSearch() {
   searchDelays.reverse();
   searchInputEl.value = '';
   }
+
+  // 헤더 메뉴 토글!
+  const menuStarterEl = document.querySelector('header .menu-starter') 
+    menuStarterEl.addEventListener('click', function () {
+      if(headerEl.classList.contains('menuing')) {
+        headerEl.classList.remove('menuing');
+        searchInputEl.value = '';
+        playScroll()
+      } else {
+          headerEl.classList.add('menuing')
+          stopScroll()
+      }
+    
+    })
+  
+
+  //헤더 검색!
+  const searchTextFiledEl = document.querySelector('header .textfield')
+  const searchCancelEl = document.querySelector('header .search-caneler')
+  searchTextFiledEl.addEventListener('click', function () {
+    headerEl.classList.add('searching--mobile')
+    searchInputEl.focus()
+  })
+  searchCancelEl.addEventListener('click', function () {
+  headerEl.classList.remove('searching--mobile');
+})
+
+
+window.addEventListener('resize', function () {
+  if (window.innerWidth <= 740) {
+    headerEl.classList.remove('searching')
+  }  else {
+    headerEl.classList.remove('searching--mobile')
+  }
+
+})
+
+
+const navEl =  document.querySelector('nav')
+const navMenuToggleEl = navEl.querySelector('.menu-toggler')
+const navMenuShadowEl = navEl.querySelector('.shadow')
+
+navMenuToggleEl.addEventListener('click', function() {
+  if (navEl.classList.contains('menuing')) {
+   addNavMenu()
+  } else {
+      hideNavMenu()
+  }
+})
+
+
+navEl.addEventListener('click', function (event) {
+  event.stopPropagation()
+})
+navMenuShadowEl.addEventListener('click', function () {
+  hideNavMenu()
+})
+
+window.addEventListener('click', function () {
+ hideNavMenu();
+})
+
+function hideNavMenu() {
+  navEl.classList.add('menuing')
+}
+
+function addNavMenu() {
+  navEl.classList.remove("menuing")
+}
+
+
+
 
   // 요소의 가시성 관찰
 
